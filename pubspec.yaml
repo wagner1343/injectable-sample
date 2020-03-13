@@ -1,0 +1,24 @@
+name: injectable_counter
+description: Exemplo de injeção de dependência utilizando getIt com o gerador de código injectable;
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.3
+
+  injectable: 0.3.0
+  get_it: 4.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  injectable_generator: 0.3.2
+  build_runner: 1.8.0
+
+flutter:
+  uses-material-design: true
