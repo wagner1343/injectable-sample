@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:injectable_counter/injectable.dart';
-import 'package:injectable_counter/services/CounterService.dart';
+
+import 'blocs/counter_bloc.dart';
 
 void main() {
   configureInjectable(Environment.dev);
@@ -16,7 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlocProvider(
+          create: (ctx) => getIt<CounterBloc>(),
+          child: MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
 }
@@ -31,12 +35,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  CounterService counterService = getIt<CounterService>();
 
-  void _incrementCounter() {
-    setState(() {
-      counterService.increment();
-    });
+  void _incrementCounter(BuildContext context) {
+    BlocProvider.of<CounterBloc>(context).add(IncrementCounterEvent());
   }
 
   @override
@@ -52,15 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '${counterService.value}',
-              style: Theme.of(context).textTheme.headline4,
+            BlocBuilder<CounterBloc, CounterState>(
+              builder: (context, state) {
+                return Text(
+                  '${state.value}',
+                  style: Theme.of(context).textTheme.display4,
+                );
+              }
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () =>  _incrementCounter(context),
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
